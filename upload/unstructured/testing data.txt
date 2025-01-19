@@ -1,0 +1,26 @@
+Impact of Learning Rate on Convergence  
+ 
+1. Convergence Speed: A higher learning rate can lead to faster convergence by taking larger 
+steps, while a lower learning rate results in slower convergence with smaller steps.  
+2. Overshooting: If the learning rate is too high, the model may overshoot the minimum of the 
+loss function, causing oscillations and instability in the training process.  
+ 
+CNN and its strengths?  
+A Convolutional Neural Network (CNN) is a type of deep learning model specifically designed for 
+processing structured grid data, like images. Imagine it as a series of layers that automatically and 
+adaptively learn spatial hierarchies of features from the input images. In simple terms, a CNN can be 
+thought of as a machine that can automatically recognize patterns and objects in images, just like 
+how our brain processes visual information.  
+• Automatic Feature Extraction: CNNs automatically learn to extract important features from 
+raw input data, eliminating the need for manual feature engineering.  
+• Spatial Hierarchy: By using multiple layers of convolutions, CNNs create a hierarchy of 
+features from simple to complex, allowing them to understand and recognize intricate patterns in 
+data.  
+• Parameter Sharing: Convolutional layers use the same filter (set of weights) across different 
+parts of the input, significantly reducing the number of parameters and computational complexity 
+compared to fully connected networks.  
+• Translation Invariance: Due to their structure, CNNs are effective at recognizing patterns 
+regardless of their position in the input, making them robust to translations and shifts in the input 
+data.  
+ 
+ 

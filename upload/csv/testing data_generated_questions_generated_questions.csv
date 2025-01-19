@@ -1,0 +1,4 @@
+Question ID,Question,Option A,Option B,Option C,Option D,Correct Answer,Question Type
+1,"Higher learning rates always lead to faster convergence, but potentially result in instability due to the model overshooting.",,,,,True,True/False
+2,CNNs are less efficient at processing unstructured data like text compared to traditional machine learning models.,,,,,False,
+3,Automatic feature extraction by CNNs eliminates the need for human developers to manually engineer features.,,,,,True,
