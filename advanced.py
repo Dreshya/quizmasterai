@@ -574,18 +574,32 @@ elif st.session_state.page == "questions":
 
                     taxonomy_levels = custom_bt_level
                     prompt = (
-                        f"Generate {ques_no} {question_type} questions based on the Bloom's Taxonomy levels specified. "
-                        f"The instructions for the Bloom's Taxonomy levels that should be applied to the questions are : \n{taxonomy_levels} \n"
+                        f"Generate {ques_no} {question_type} questions based on the Bloom's Taxonomy levels specified in the instructions. "
                         f"Strictly focus on the specified instructions on which Bloom's Taxonomy levels to apply that is relevant to the text to generate the questions. "
-                        "Specify the Bloom's taxanomy level applied for every question. \n\n"
+                        "Specify the Bloom's taxonomy level applied for every question. \n\n"
+                        f"The customized instructions : \n{taxonomy_levels} \n\n"
+                        "IMPORTANT : Must apply the Bloom's Taxonomy levels to its corresponding questions as per the instructions. "
+                        "STRICTLY DO NOT apply Bloom's Taxonomy levels that are not mentioned, ONLY apply the level specified for each question. "
+                        "Example, question 1 : level 4 means apply level 4 : Analyzing on ONLY question 1. "
+                        "If instruction says question 3 - 5 : level 1 and level 2, it means apply level 1 : remembering and "
+                        "level 2 : understanding ONLY on question 3, question 4 and question 5. \n\n"
                     )
 
                     if custom_comments:
                         prompt += (
-                            "Include and take into consideration of these comments when generating the questions. "
-                            "The comments are : \n"
-                            f"{custom_comments}\n\n"
+                            "Strictly take note of these comments when generating the questions.\n"
+                            f"Additional Comments:\n{custom_comments}\n\n"
                         )
+                    
+                    prompt += (
+                        "Description of Bloom's Taxonomy levels from the lower-order thinking skills to higher-order thinking skills :\n"
+                        "Level 1 : Remembering\nLevel 2 : Understanding\nLevel 3 : Applying\nLevel 4 : Analyzing\nLevel 5 : Evaluating\nLevel 6 : Creating\n"
+                        "Refer to the description above when instructions contain specific Bloom's Taxonomy Level numbers for specific questions.\n"
+                        "For example, question 2 : level 4 means level 4 : analyzing must be applied to question 2 only\n\n"
+                        "Ensure the questions follow these instructions exactly:\n"
+                        "- Specify the Bloom's Taxonomy level for each question in parentheses.\n"
+                        "- Match all instructions and comments given above.\n\n"
+                    )
 
                 # Add specific instructions based on question type
                 if question_type == "Multiple-Choice":
@@ -609,10 +623,12 @@ elif st.session_state.page == "questions":
                 if st.session_state.ins_option == 1:
                     prompt += (f"Choose one or both from these Bloom's taxanomy levels : {taxonomy_levels[difficulty].lower()}, to replace inside the parentheses. ")
                 elif st.session_state.ins_option == 2:
-                    prompt += ("Identify the respective Bloom's Taxonomy levels applied for each question and replace inside the parentheses. ")
+                    prompt += ("Identify the respective Bloom's Taxonomy levels for each question and replace inside the parentheses. "
+                               "The Bloom's Taxonomy levels labelled for each question MUST be exactly how it is specified in the instructions. ")
 
                 prompt += (
                     "Do NOT mention 'Bloom's taxanomy level' inside the parentheses, ONLY specify Bloom's taxanomy level name such as (Analyzing) or (Understanding). "
+                    "Do NOT mention the level numbering such as (Level 1) or (Level 3) inside the parentheses, only mention the level's names such as (Analyzing) or (Understanding). "
                     "The parentheses MUST be placed after the question numbering and before question starts.\n\n"
 
                     "After generating, include a separate section titled '$$Correct Answers$$'. "
