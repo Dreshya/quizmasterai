@@ -4,7 +4,7 @@ from PyPDF2 import PdfReader
 import streamlit as st
 import ollama
 import pandas as pd
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from quiz_logic import load_quiz_data, process_answer
 from utils import display_summary, review_answers
 
