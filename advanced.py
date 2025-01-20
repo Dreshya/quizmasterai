@@ -5,6 +5,21 @@ import streamlit as st
 import ollama
 import pandas as pd
 import matplotlib.pyplot as plt
+from quiz_logic import load_quiz_data, process_answer
+from utils import display_summary, review_answers
+
+if 'current_question' not in st.session_state:
+    st.session_state.current_question = 0
+if 'correct_answers' not in st.session_state:
+    st.session_state.correct_answers = 0
+if 'total_attempted' not in st.session_state:
+    st.session_state.total_attempted = 0
+if 'data' not in st.session_state:
+    st.session_state.data = [] 
+if 'quiz_started' not in st.session_state:
+    st.session_state.quiz_started = False
+if 'wrong_answers' not in st.session_state:
+    st.session_state.wrong_answers = 0
 
 
 #def draw_pyramid():
@@ -405,13 +420,17 @@ def convert_questions(file_path, output_dir):
             df.to_csv(output_csv, index=False)
             print(f"Processed questions saved to {output_csv}")
             print(f"Total questions processed: {len(questions)}")
+            return output_csv  # Return the path to the generated CSV file
         else:
             print("No questions to process.")
+            return None
 
     except FileNotFoundError:
         print(f"File not found: {file_path}")
+        return None
     except Exception as e:
         print(f"An error occurred: {e}")
+        return None
 
 
 
@@ -667,9 +686,50 @@ elif st.session_state.page == "questions":
                     st.success(f"Generated questions saved successfully as {generated_questions_file}!")
 
                     output_dir = "upload/csv"
-                    convert_questions(generated_questions_file, output_dir)
-                    st.success(f"Generated csv saved successfully as {output_dir}!")
+                    generated_csv_file = convert_questions(generated_questions_file, output_dir)
+
+                    print (generated_csv_file)
+
+                if generated_csv_file:
+                    st.success(f"Questions successfully converted to CSV: {generated_csv_file}")
+                    load_quiz_data(generated_csv_file)
+
+                    # Navigate to the quiz page after loading the quiz data
+                    if st.session_state.quiz_started:
+                        st.session_state.page = "quiz"  # Set the page to "quiz"
+                        st.rerun()  # Re-run to refresh the page view
 
                    
             else:
                 st.warning("Please select a valid structured text file first.")
+
+
+# Add this section to handle the quiz
+elif st.session_state.page == "quiz":
+    st.title("QuizMasterAI")
+    total_questions = len(st.session_state.data)
+    current_index = st.session_state.current_question
+
+    if current_index < total_questions:
+        st.progress((current_index + 1) / total_questions)
+        process_answer(current_index)
+    else:
+        # Quiz completed
+        st.success("Quiz completed! 🎉 Here are your results:")
+        st.session_state.page = "summary"  # Set the page to "summary"
+        st.rerun()  # Refresh the app to show the summary page
+
+        
+
+# Summary Page
+elif st.session_state.page == "summary":  
+    st.title("Quiz Summary")  
+    total_questions = len(st.session_state.data)
+    display_summary(total_questions)
+    if st.button("Review"):
+        review_answers()
+
+    # Option to return to the home page
+    if st.button("Back to Home"):
+        st.session_state.page = "home"
+        st.rerun()
