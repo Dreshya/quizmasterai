@@ -205,15 +205,34 @@ def process_text_with_model(input_file):
         st.error(f"Error processing text with the model: {e}")
         return None
 
+
 # Streamlit App
-st.title("QuizMasterAI")
+#st.title("QuizMasterAI")
+
+
+
+
+# Create two columns: one for the logo and one for the title
+col1, col2 = st.columns([1, 5])  # Adjust the width ratio if necessary
+
+# Display the logo in the first column
+col1.image("logo.png", width=200)
+
+# Display the title in the second column
+with col2:
+    # Top row: Main title
+    st.title("QuizMasterAI")
+    
+    # Bottom row: Sub-title or secondary text
+    st.caption("Transforming Quiz Creation with AI")
+
 
 
 # Session states for buttons
 if "training_complete" not in st.session_state:
     st.session_state.training_complete = False
 if "page" not in st.session_state:
-    st.session_state.page = "home"
+    st.session_state.page = "intro"
 
     
 
@@ -391,11 +410,91 @@ def convert_questions(file_path, output_dir):
         return None
 
 
+if st.session_state.page == "intro":
+    # Main content
+    # Rainbow text using CSS
+    st.markdown('<div class="title">Welcome to <span style="color:#4B4EA7">QuizMasterAI</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle">QuizMasterAI is a comprehensive tool for educators, students, and professionals seeking an efficient way to transform PDFs into engaging learning quizzes!</div>', unsafe_allow_html=True)
 
+    st.markdown(
+        """
+        <div class="description">
+            <strong>Key Features:</strong>
+            <ul>
+                <li><strong>AI-Powered Quiz Generation:</strong> Utilizes AI to generate structured and tailored quizzes from uploaded PDF documents.</li>
+                <li><strong>Bloom's Taxonomy Integration:</strong> Supports questions categorized by difficulty levels—easy, medium, or hard—aligned with Bloom's Taxonomy (e.g., Understanding, Applying, Analyzing).</li>
+                <li><strong>Interactive Design:</strong> Provides a sleek, user-friendly interface with custom-styled sliders, buttons, and number inputs for seamless user interaction.</li>
+            </ul>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
+    st.markdown(
+    """
+    <style>
+    div.stButton > button:first-child {
+    font-size: 30px;
+    font-weight: 500;
+    text-align: center;
+    padding: 10px 20px;
+    color: white !important;
+    background-color: #4B4EA7;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    }
+    div.stButton > button:hover {
+    background-color: #5696d1;
+    color: #ff99ff;
+    }
+    div.stButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True)
+    
+    # Add custom CSS for styling
+    st.markdown(
+        """
+        <style>
+            .title {
+                font-size: 30px;
+                font-weight: 700;
+                text-align: left;
+                margin-top: 10px;
+                color: #333333;
+            }
+            .subtitle {
+                font-size: 16px;
+                font-weight: 400;
+                text-align: left;
+                color: #555555;
+                margin-bottom: 10px;
+            }
+            .description {
+                font-size: 18px;
+                line-height: 1.6;
+                text-align: left;
+                margin: 20px auto;
+                max-width: 800px;
+                color: #444444;
+            }
+            .sidebar-success {
+                font-size: 16px;
+                font-weight: bold;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
-
-
+    if st.button("Try Now"):
+        st.session_state.page = "home" 
+        st.rerun()
 
 
         
