@@ -7,47 +7,47 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def draw_pyramid():
+#def draw_pyramid():
 
-    st.header("Bloom's Taxonomy Pyramid")
-    st.write("This pyramid represents the six levels of Bloom's Taxonomy, from lower-order thinking skills at the base to higher-order skills at the top.")
+#    st.header("Bloom's Taxonomy Pyramid")
+#    st.write("This pyramid represents the six levels of Bloom's Taxonomy, from lower-order thinking skills at the base to higher-order skills at the top.")
 
     # Bloom's Taxonomy levels
-    levels = [
-        "Remembering",
-        "Understanding",
-        "Applying",
-        "Analyzing",
-        "Evaluating",
-        "Creating"
-    ]
-    colors = ["#FF6F61", "#FFB400", "#F7EA00", "#94D82D", "#4CAF50", "#2196F3"]
+#    levels = [
+#        "Remembering",
+#        "Understanding",
+#        "Applying",
+#        "Analyzing",
+#        "Evaluating",
+#        "Creating"
+#    ]
+#    colors = ["#FF6F61", "#FFB400", "#F7EA00", "#94D82D", "#4CAF50", "#2196F3"]
 
     # Figure and axis
-    fig, ax = plt.subplots(figsize=(4, 6))  # Smaller and more compact
-    ax.axis("off")
+#    fig, ax = plt.subplots(figsize=(4, 6))  # Smaller and more compact
+#    ax.axis("off")
 
     # Draw pyramid
-    base_width = 10
-    height = len(levels)
-    for i, (level, color) in enumerate(zip(levels, colors)):
-        # Calculate dimensions
-        width = base_width * (1 - i / height)
-        left = (base_width - width) / 2
-        bottom = i
+#    base_width = 10
+#    height = len(levels)
+#    for i, (level, color) in enumerate(zip(levels, colors)):
+#        # Calculate dimensions
+#        width = base_width * (1 - i / height)
+#        left = (base_width - width) / 2
+#        bottom = i
 
         # Draw rectangle
-        ax.add_patch(plt.Rectangle((left, bottom), width, 1, color=color, ec="white", lw=1))
+#        ax.add_patch(plt.Rectangle((left, bottom), width, 1, color=color, ec="white", lw=1))
         
         # Add text
-        ax.text(left + width / 2, bottom + 0.5, level, ha="center", va="center", 
-                fontsize=6, color="white", fontweight="bold")
+#        ax.text(left + width / 2, bottom + 0.5, level, ha="center", va="center", 
+#                fontsize=6, color="white", fontweight="bold")
 
-    ax.set_xlim(0, base_width)
-    ax.set_ylim(0, height)
-    ax.set_aspect("equal")
+#    ax.set_xlim(0, base_width)
+#    ax.set_ylim(0, height)
+#    ax.set_aspect("equal")
     
-    return fig
+#    return fig '''
 
 
 st.markdown(
@@ -524,8 +524,16 @@ elif st.session_state.page == "questions":
         # Display textbox for customization
         elif st.session_state.ins_option == 2:
             
-            fig = draw_pyramid()
-            st.pyplot(fig)
+            #fig = draw_pyramid()
+            #st.pyplot(fig)
+
+            from PIL import Image
+
+            # Load the image
+            image = Image.open('bt level.png') 
+
+            # Display the image
+            st.image(image, caption='Blooms Taxonomy Levels')
 
             custom_bt_level = st.text_area(
                 "Customize the Bloom's Taxonomy levels you want included. You may combine different levels.",
