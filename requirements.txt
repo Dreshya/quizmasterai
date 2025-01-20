@@ -1,0 +1,6 @@
+os
+re
+PyPDF2
+PdfReader
+ollama
+pandas
