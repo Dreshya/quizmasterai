@@ -20,6 +20,9 @@ def display_summary(total_questions):
     </div>
     """, unsafe_allow_html=True)
 
+    score = (st.session_state.correct_answers / total_questions) * 100
+    st.title(f"{score:.2f}%")
+
     col1, col2, col3 = st.columns(3)
     with col1:
         st.write(f"**Total Questions:** {total_questions}")
@@ -59,6 +62,7 @@ def taxonomy_level_analysis_normalized(total_questions):
     # Display percentages for levels with questions
     if total_attempted > 0:
         st.write("### Performance by Bloom's Taxonomy Levels:")
+        st.caption("Shows the percentage of correct answers by its respective Bloom's Taxonomy Levels")
         for level, correct_count in bt_levels.items():
             total_count = bt_totals[level]
             if total_count > 0:  # Skip levels with no questions
