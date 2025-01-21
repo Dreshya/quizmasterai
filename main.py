@@ -4,7 +4,6 @@ from PyPDF2 import PdfReader
 import streamlit as st
 import ollama
 import pandas as pd
-import matplotlib.pyplot as plt
 from quiz_logic import load_quiz_data, process_answer
 from utils import display_summary, review_answers
 
@@ -599,9 +598,6 @@ elif st.session_state.page == "questions":
             )
         # Display textbox for customization
         elif st.session_state.ins_option == 2:
-            
-            #fig = draw_pyramid()
-            #st.pyplot(fig)
 
             from PIL import Image
 
@@ -763,7 +759,7 @@ elif st.session_state.page == "questions":
 
 # Add this section to handle the quiz
 elif st.session_state.page == "quiz":
-    st.title("QuizMasterAI")
+    st.title("Quiz")
     total_questions = len(st.session_state.data)
     current_index = st.session_state.current_question
 
@@ -779,8 +775,7 @@ elif st.session_state.page == "quiz":
         
 
 # Summary Page
-elif st.session_state.page == "summary":  
-    st.title("Quiz Summary")  
+elif st.session_state.page == "summary":    
     total_questions = len(st.session_state.data)
     display_summary(total_questions)
     if st.button("Review"):
