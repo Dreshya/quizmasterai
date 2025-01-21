@@ -44,10 +44,10 @@ def process_answer(current_index):
         st.session_state.answers[current_index] = student_answer
         correct_answer = str(question_row['Correct Answer']).strip()
         if student_answer == correct_answer:
-            st.success("Correct! 🎉")
+            #st.success("Correct! 🎉")
             st.session_state.correct_answers += 1
         else:
-            st.error("Incorrect! ❌")
+            #st.error("Incorrect! ❌")
             st.session_state.wrong_answers += 1
         st.session_state.current_question += 1
         st.rerun()
