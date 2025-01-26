@@ -205,8 +205,7 @@ def process_text_with_model(input_file):
         return None
 
 
-# Streamlit App
-#st.title("QuizMasterAI")
+
 
 
 
@@ -376,6 +375,12 @@ def convert_questions(file_path, output_dir):
 
             for question in questions:
                 
+                if "True/False" in question['Type']:
+                    if "T" or "t" in question['Correct Answer']:
+                        question['Correct Answer'] = "True"
+                    elif "F" or "f" in question['Correct Answer']:
+                        question['Correct Answer'] = "False"
+
                 options = question['Options']
                 processed_data.append({
                     'Question ID': question['Question ID'],
@@ -420,9 +425,10 @@ if st.session_state.page == "intro":
         <div class="description">
             <strong>Key Features:</strong>
             <ul>
-                <li><strong>AI-Powered Quiz Generation:</strong> Utilizes AI to generate structured and tailored quizzes from uploaded PDF documents.</li>
-                <li><strong>Bloom's Taxonomy Integration:</strong> Supports questions categorized by difficulty levels—easy, medium, or hard—aligned with Bloom's Taxonomy (e.g., Understanding, Applying, Analyzing).</li>
-                <li><strong>Interactive Design:</strong> Provides a sleek, user-friendly interface with custom-styled sliders, buttons, and number inputs for seamless user interaction.</li>
+                <li><strong>AI-Powered Quiz Generation :</strong> Utilizes AI to generate structured and tailored quizzes from uploaded PDF documents.</li>
+                <li><strong>Bloom's Taxonomy Integration :</strong> Supports questions categorized by difficulty levels—easy, medium, or hard—aligned with Bloom's Taxonomy (e.g., Understanding, Applying, Analyzing). Allows customizable instructions for question generation.</li>
+                <li><strong>Interactive Design :</strong> Provides a sleek, user-friendly interface with custom-styled sliders, buttons, and number inputs for seamless user interaction.</li>
+                <li><strong>Multi-format Questions :</strong> Build questions in two different types - multiple-choice and true/false questions. </li>
             </ul>
         </div>
         """,
@@ -499,7 +505,7 @@ if st.session_state.page == "intro":
         
 # Upload PDF and Train Model
 if st.session_state.page == "home":
-    st.write("Upload a PDF file to train the AI for Quiz generation.")
+    st.write("Upload a PDF file to summarize the lecture notes for Quiz generation.")
     uploaded_pdf = st.file_uploader("Upload a PDF", type="pdf", label_visibility="visible")
 
     if uploaded_pdf:
@@ -515,7 +521,7 @@ if st.session_state.page == "home":
             f.write(uploaded_pdf.getbuffer())
 
         if not st.session_state.training_complete:
-            if st.button("Train the AI Model"):
+            if st.button("Summarize"):
                 # Extract text from the PDF
                 with st.spinner("Processing PDF..."):
                     extracted_text = extract_text_from_pdf(file_path)
@@ -538,7 +544,7 @@ if st.session_state.page == "home":
                             structured_path = os.path.join(base_dir, "structured", f"{os.path.splitext(uploaded_pdf.name)[0]}.txt")
                             save_text_to_file(structured_text, structured_path)
                             st.session_state.training_complete = True
-                            st.success("AI has been successfully trained. You can now generate questions.")
+                            st.success("The lecture note has been successfully summarized. You can now generate questions.")
                         else:
                             st.error("The model failed to process the text.")
                     else:
@@ -569,7 +575,10 @@ elif st.session_state.page == "questions":
         context = read_context(file_path)
 
         # User input for question generation
-        st.write("### Customize Your Question Preferences")
+        st.write("### Question Details")
+        #st.write("Fill in the required question details up to your own preference.")
+        st.markdown('<div class="difficulty-slider-label">Set Difficulty</div>', unsafe_allow_html=True)
+        st.write("Choose standard or advanced for setting difficulty level.")
 
         # Question generation inputs
         # Initialize session state for options
@@ -589,7 +598,13 @@ elif st.session_state.page == "questions":
 
         # Display slider with custom styles
         if st.session_state.ins_option == 1:
-            st.markdown('<div class="difficulty-slider-label">Set Difficulty</div>', unsafe_allow_html=True)
+            
+            st.caption("Predefined Bloom's Taxonomy levels")
+            st.caption("Harder difficulty levels applies higher Bloom's Taxonomy levels. Increase the difficulty level for more complex questions.")
+            st.write("Easy : Remembering (Level 1), Understanding (Level 2)")
+            st.write("Medium: Applying (Level 3), Analyzing (Level 4)")
+            st.write("Hard : Evaluating (Level 5), Creating (Level 6)")
+
             difficulty = st.select_slider(
                 "",
                 options=["easy", "medium", "hard"],
@@ -598,6 +613,9 @@ elif st.session_state.page == "questions":
             )
         # Display textbox for customization
         elif st.session_state.ins_option == 2:
+
+            st.caption("Flexibility on Bloom's Taxonomy levels customization")
+            st.write("Assign lower levels for easier questions, higher levels for more complex questions.")
 
             from PIL import Image
 
@@ -608,13 +626,13 @@ elif st.session_state.page == "questions":
             st.image(image, caption='Blooms Taxonomy Levels')
 
             custom_bt_level = st.text_area(
-                "Customize the Bloom's Taxonomy levels you want included. You may combine different levels.",
-                placeholder="Enter Bloom's Taxonomy instructions here ..."
+                "Customize the Bloom's Taxonomy levels you want applied. You may combine different levels for different questions.",height=130,
+                placeholder="Example :\nQuestion 1 : Remembering\nQuestion 2 - 3 : Evaluating\nQuestion 4 : Understanding"
             )
             
             custom_comments = st.text_area(
-                "Specify any additional comments for the questions.",
-                placeholder="Enter additional comments here ..."
+                "Specify any additional comments for the content of the questions (Optional)",
+                placeholder="Example :\nFocus more on definition based questions"
             )
 
         st.markdown('<div class="questions-slider-label">Number of Questions</div>', unsafe_allow_html=True)
@@ -648,8 +666,8 @@ elif st.session_state.page == "questions":
                     prompt = (
                         f"Generate {ques_no} {question_type} questions based on the Bloom's Taxonomy levels specified in the instructions. "
                         f"Strictly focus on the specified instructions on which Bloom's Taxonomy levels to apply that is relevant to the text to generate the questions. "
-                        "Specify the Bloom's taxonomy level applied for every question. \n\n"
-                        f"The customized instructions : \n{taxonomy_levels} \n\n"
+                        "Specify the Bloom's taxonomy level applied for every question. \n\n Use only the specified attribute for  taxonomy_levels. If (easy) is chosen, use only {Remembering and Understanding, If (medium) is chosen, use only {Remembering and Understanding} and,  If hard is chosen, use only {Evaluating and Creating} "
+                        f"The customized instructions : \n{taxonomy_levels} .  \n\n"
                         "IMPORTANT : Must apply the Bloom's Taxonomy levels to its corresponding questions as per the instructions. "
                         "STRICTLY DO NOT apply Bloom's Taxonomy levels that are not mentioned, ONLY apply the level specified for each question. "
                         "Example, question 1 : level 4 means apply level 4 : Analyzing on ONLY question 1. "
@@ -783,5 +801,7 @@ elif st.session_state.page == "summary":
 
     # Option to return to the home page
     if st.button("Back to Home"):
+        st.session_state.correct_answers = 0
+        st.session_state.wrong_answers = 0
         st.session_state.page = "home"
         st.rerun()
